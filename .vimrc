@@ -1,0 +1,163 @@
+" Needed on some linux distros.
+" see http://www.adamlowe.me/2009/12/vim-destroys-all-other-rails-editors.html
+
+" Set up addon repositories
+let g:vim_addon_manager = {}
+let g:vim_addon_manager['plugin_sources'] = {}
+let g:vim_addon_manager['plugin_sources']['prefixr'] = {'type': 'git', 'url': 'git://github.com/mr-szymanski/prefixr.git' }
+
+fun SetupVAM()
+    let addons_base = expand('$HOME') . '/vim-addons'
+    let addons_manager = addons_base . '/vim-addon-manager'
+    execute 'set runtimepath+=' . addons_manager
+
+    if finddir(addons_base, '') == ''
+        call mkdir(addons_base, '')
+    endif
+    if finddir(addons_manager) == ''
+        execute 'cd ' . addons_base
+        execute '!git clone git://github.com/MarcWeber/vim-addon-manager.git'
+    endif
+    "set runtimepath+=~/vim-addons/vim-addon-manager
+    call vam#ActivateAddons(["Solarized",
+                \ "fugitive",
+                \ "The_NERD_tree",
+                \ "snipmate-snippets",
+                \ "supertab",
+                \ "HTML_AutoCloseTag",
+                \ "Command-T",
+                \ "matchit.zip",
+                \ "The_NERD_Commenter",
+                \ "Syntastic",
+                \ "tcomment",
+                \ "vim_easymotion",
+                \ "sparkup",
+                \ "surround",
+                \ "prefixr"],
+                \ {'auto_install' : 0})
+endf
+call SetupVAM()
+" " experimental: run after gui has been started [3]
+" " option1: au VimEnter * call SetupVAM()
+" " option2: au GUIEnter * call SetupVAM()
+" " call sample_vimrc_for_new_users#Load()
+
+set nocompatible
+
+" Enable filetype stuff
+filetype on
+filetype indent plugin on
+syntax enable
+scriptencoding utf-8
+set encoding=utf-8
+set fileencoding=utf-8
+set history=1000  				    " Store a ton of history (default is 20)
+
+" Check for GUI
+if has('gui_running')
+    set background=dark
+    set guioptions-=L               " Remove left scrollbar in splits
+    set guioptions-=R               " Remove right scrollbar in splits
+    set guioptions-=l               " Remove left scrollbar
+    set guioptions-=r               " Remove right scrollbar
+    set guioptions-=b               " Remove bottom scrollbar
+    set guioptions-=m               " Remove menu
+else
+    set background=dark
+endif
+
+" Vim UI {
+    set t_Co=16                     " Set the terminal colours to 16
+    let g:solarized_termcolors=16   " Set solarized to use 16 colours
+    colorscheme solarized           " Use the solarized colour scheme
+	set tabpagemax=15 			    " only show 15 tabs
+	set showmode 				    " display the current mode
+	set linespace=0 			    " No extra spaces between rows
+	set nu 				    	    " Line numbers on
+	set showmatch				    " show matching brackets/parenthesis
+	set hlsearch				    " highlight search terms
+	set ignorecase 				    " case insensitive search
+	set wildmenu 				    " show list instead of just completing
+	set wildmode=list:longest,full 		" command <Tab> completion, list matches, then longest common part, then all.
+	set scrolljump=5 			    " lines to scroll when cursor leaves screen
+	set scrolloff=3 			    " minimum lines to keep above and below cursor
+	set foldenable 				    " auto fold code
+    set laststatus=2                " force vim to always show the status line
+"  }
+
+" Status line {
+    set statusline=%<%f\                            " Show filename
+    set statusline+=%y\ \                           " Show filetype
+    set statusline+=%h%m%r                          " Help section
+    set statusline+=%{fugitive#statusline()}        " Show git branch
+    set statusline+=%=                              " Divide between left and right justification
+    set statusline+=%-14.(%l,%c%V%)\                " line number, column and column width
+    set statusline+=%P                              " Percentage through buffer
+" }
+
+" Formatting {
+	set nowrap				        " wrap long lines
+	set shiftwidth=4			    " use indents of 4 spaces
+	set expandtab				    " tabs are spaces, not tabs
+	set tabstop=4				    " an indentation every four columns
+	set softtabstop=4			    " let backspace delete indent
+	set pastetoggle=<F12>		    " pastetoggle (sane indentation on pastes)
+	" Remove trailing whitespaces and ^M chars
+	autocmd FileType c,cpp,java,php,js,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+" }
+
+" Filetype specific commands {
+    au BufRead,BufNewFile *.ascx set filetype=html      " Load ascx files as HTML
+" }
+
+" Key (re)Mappings {
+	" Easier moving in tabs and windows
+	map <C-J> <C-W>j<C-W>_
+	map <C-K> <C-W>k<C-W>_
+	map <C-L> <C-W>l<C-W>_
+	map <C-H> <C-W>h<C-W>_
+	map <C-K> <C-W>k<C-W>_
+
+	""" Code folding options
+	nmap <leader>f0 :set foldlevel=0<CR>
+	nmap <leader>f1 :set foldlevel=1<CR>
+	nmap <leader>f2 :set foldlevel=2<CR>
+	nmap <leader>f3 :set foldlevel=3<CR>
+	nmap <leader>f4 :set foldlevel=4<CR>
+	nmap <leader>f5 :set foldlevel=5<CR>
+	nmap <leader>f6 :set foldlevel=6<CR>
+	nmap <leader>f7 :set foldlevel=7<CR>
+	nmap <leader>f8 :set foldlevel=8<CR>
+	nmap <leader>f9 :set foldlevel=9<CR>
+" }
+
+" Plugins {
+
+	" Supertab {
+		let g:SuperTabDefaultCompletionType = "context"                                 " Context tab completion
+		"let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
+        let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+        let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
+        let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
+	" }
+	" easymotion {
+		let g:EasyMotion_leader_key = '<Leader>m' 		" change the leader to \m to avoid keymappings clashing with command-t plugin. 
+	" }
+	" NerdTree {
+		map <C-x> :NERDTreeToggle<CR>:NERDTreeMirror<CR>
+		map <leader>e :NERDTreeFind<CR>
+		nmap <leader>nt :NERDTreeFind<CR>
+
+		let NERDTreeShowBookmarks=1
+		let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
+		let NERDTreeChDirMode=0
+		let NERDTreeQuitOnOpen=1
+		let NERDTreeShowHidden=1
+		let NERDTreeKeepTreeInNewTab=1
+	" }
+    " Syntastic {
+        if has('signs')
+           let g:syntastic_enable_signs = 1
+        endif
+    " }
+" }
