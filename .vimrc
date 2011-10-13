@@ -67,7 +67,7 @@ else
 endif
 
 " Vim UI {
-    set t_Co=16                     " Set the terminal colours to 16
+    set t_Co=15                     " Set the terminal colours to 16
     let g:solarized_termcolors=16   " Set solarized to use 16 colours
     colorscheme solarized           " Use the solarized colour scheme
 	set tabpagemax=15 			    " only show 15 tabs
