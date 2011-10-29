@@ -29,7 +29,7 @@ fun SetupVAM()
                 \ "matchit.zip",
                 \ "The_NERD_Commenter",
                 \ "Syntastic",
-                \ "tcomment",
+                \ "tComment",
                 \ "vim_easymotion",
                 \ "sparkup",
                 \ "surround",
