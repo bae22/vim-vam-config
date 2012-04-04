@@ -4,7 +4,7 @@
 " Set up addon repositories
 let g:vim_addon_manager = {}
 let g:vim_addon_manager['plugin_sources'] = {}
-let g:vim_addon_manager['plugin_sources']['prefixr'] = {'type': 'git', 'url': 'git://github.com/mr-szymanski/prefixr.git' }
+let g:vim_addon_manager['plugin_sources']['prefixer'] = {'type': 'git', 'url': 'git://github.com/bae22/prefixer.git' }
 
 fun SetupVAM()
     let addons_base = expand('$HOME') . '/vim-addons'
@@ -23,18 +23,18 @@ fun SetupVAM()
                 \ "fugitive",
                 \ "The_NERD_tree",
                 \ "snipmate-snippets",
-                \ "supertab",
+                \ "SuperTab_continued.",
                 \ "HTML_AutoCloseTag",
                 \ "Command-T",
                 \ "matchit.zip",
                 \ "The_NERD_Commenter",
                 \ "Syntastic",
                 \ "tComment",
-                \ "vim_easymotion",
+                \ "EasyMotion",
                 \ "sparkup",
                 \ "surround",
-                \ "prefixr"],
-                \ {'auto_install' : 0})
+                \ "prefixer"],
+                \ {'auto_install' : 1})
 endf
 call SetupVAM()
 " " experimental: run after gui has been started [3]
